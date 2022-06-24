@@ -1,5 +1,5 @@
-import InvalidUuidError from '../../@seedwork/errors/invalid-uuid.error'
-import UniqueEntityId from './unique-entity-id.vo'
+import InvalidUuidError from '../../../errors/invalid-uuid.error'
+import UniqueEntityId from '../unique-entity-id.vo'
 import { validate as uuidValidade } from 'uuid'
 
 // const spyValidateMethod = () => {
@@ -26,14 +26,14 @@ describe('UniqueEntityId Unit Tests', () => {
     // const validateSpy = spyValidateMethod()
     const id = 'a0ece5db-cd14-4f21-812f-966d1d6cf919'
     const vo = new UniqueEntityId(id)
-    expect(vo.id).toBe(id)
+    expect(vo.value).toBe(id)
     expect(validateSpy).toHaveBeenCalled()
   })
 
   it('should accept a uuid passed in constructor', () => {
     // const validateSpy = spyValidateMethod()
     const vo = new UniqueEntityId()
-    expect(uuidValidade(vo.id)).toBeTruthy()
+    expect(uuidValidade(vo.value)).toBeTruthy()
     expect(validateSpy).toHaveBeenCalled()
   })
 })
