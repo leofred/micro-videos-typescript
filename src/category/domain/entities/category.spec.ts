@@ -1,11 +1,16 @@
 import { Category, CategoryProperties } from './category'
 import omit from 'lodash/omit'
-import UniqueEntityId from '../../../@seedwork/domain/unique-entity-id.vo'
+import UniqueEntityId from '../../../@seedwork/domain/value-objects/unique-entity-id.vo'
 
 describe('Category Unit Tests', () => {
-  test('construtor da categoria', () => {
+  beforeEach(() => {
+    Category.validate = jest.fn()
+  })
+  test('constructor of Category', () => {
     let category = new Category({ name: 'any_category' })
     let props = omit(category.props, 'created_at')
+
+    expect(Category.validate).toHaveBeenCalled()
     expect(props).toStrictEqual({
       name: 'any_category',
       description: null,
@@ -65,16 +70,19 @@ describe('Category Unit Tests', () => {
       { props: { name: 'any_category' }, id: new UniqueEntityId() }
     ]
 
-    data.forEach(i => {
+    data.forEach((i) => {
       const category = new Category(i.props, i.id)
       expect(category.id).not.toBeNull()
-      expect(category.id).toBeInstanceOf(UniqueEntityId)
+      expect(category.uniqueEntityId).toBeInstanceOf(UniqueEntityId)
     })
   })
 
-  test('Getter of name prop', () => {
-    const category = new Category({ name: 'any_category' })
-    expect(category.name).toBe('any_category')
+  test('Getter and Setter of name prop', () => {
+    const category = new Category({ name: 'any_name' })
+    expect(category.name).toBe('any_name')
+
+    category['name'] = 'other_name'
+    expect(category.name).toBe('other_name')
   })
 
   test('Getter and setter of description prop', () => {
@@ -142,4 +150,30 @@ describe('Category Unit Tests', () => {
     })
     expect(category.created_at).toBe(created_at)
   })
+  
+  it('should update a category', () => {
+    const category = new Category({ name: 'any_category' })
+    category.update('Documentary', 'some description')
+    expect(Category.validate).toHaveBeenCalledTimes(2)
+    expect(category.name).toBe('Documentary')
+    expect(category.description).toBe('some description')
+  })
+
+  it('should activate a category', () => {
+    const category = new Category({
+      name: 'any_category',
+      is_active: false
+    })
+    category.activate()
+    expect(category.is_active).toBeTruthy()
+  })
+
+  it('should deactivate a category', () => {
+    const category = new Category({
+      name: 'any_category',
+      is_active: true
+    })
+    category.deactivate()
+    expect(category.is_active).toBeFalsy()
+  })  
 })
