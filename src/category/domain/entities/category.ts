@@ -1,4 +1,4 @@
-import { EntityValidationError } from './../../../@seedwork/domain/errors/validation-error';
+import { EntityValidationError } from '../../../@seedwork/domain/errors/validation-error';
 // import ValidatorRules from '../../../@seedwork/validators/validator-rules'
 import Entity from '../../../@seedwork/domain/entity/entity'
 import UniqueEntityId from '../../../@seedwork/domain/value-objects/unique-entity-id.vo'
